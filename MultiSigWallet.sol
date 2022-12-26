@@ -18,6 +18,14 @@ contract MultiSigWallet {
     mapping(address => bool) isSigner;
     address[] public signers;
 
+    struct Transaction {
+        address to;
+        uint value;
+        bytes data;
+        bool execute;
+        uint confirmations;
+    }
+
     constructor(address[] memory _signers) {
         require(_signers.length > 0, "No Signers");
         for (uint i = 0; i < _signers.length; i++) {
@@ -26,5 +34,9 @@ contract MultiSigWallet {
             signers.push(_signers[i]);
             isSigner[_signers[i]] = true;
         }
+    }
+
+    receive() external payable {
+        emit DepositSuccessful(msg.sender, msg.value);
     }
 }
